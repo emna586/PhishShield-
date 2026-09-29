@@ -1,0 +1,130 @@
+{
+  "PhishFOE": {
+    "LightGBM": {
+      "accuracy": 98.78,
+      "precision": 98.95,
+      "recall": 98.56,
+      "f1": 98.75,
+      "auc_roc": 99.87,
+      "n_train": 80850,
+      "n_test": 20213,
+      "n_features": 29
+    },
+    "XGBoost": {
+      "accuracy": 98.7,
+      "precision": 98.91,
+      "recall": 98.43,
+      "f1": 98.67,
+      "auc_roc": 99.87,
+      "n_train": 80850,
+      "n_test": 20213,
+      "n_features": 29
+    },
+    "RandomForest": {
+      "accuracy": 98.45,
+      "precision": 98.93,
+      "recall": 97.9,
+      "f1": 98.41,
+      "auc_roc": 99.84,
+      "n_train": 80850,
+      "n_test": 20213,
+      "n_features": 29
+    }
+  },
+  "UCI": {
+    "LightGBM": {
+      "accuracy": 97.01,
+      "precision": 96.71,
+      "recall": 97.97,
+      "f1": 97.34,
+      "auc_roc": 99.68,
+      "n_train": 8844,
+      "n_test": 2211,
+      "n_features": 30
+    },
+    "XGBoost": {
+      "accuracy": 97.01,
+      "precision": 96.79,
+      "recall": 97.89,
+      "f1": 97.33,
+      "auc_roc": 99.65,
+      "n_train": 8844,
+      "n_test": 2211,
+      "n_features": 30
+    },
+    "RandomForest": {
+      "accuracy": 96.2,
+      "precision": 95.34,
+      "recall": 97.97,
+      "f1": 96.63,
+      "auc_roc": 99.59,
+      "n_train": 8844,
+      "n_test": 2211,
+      "n_features": 30
+    }
+  },
+  "dataset_phishing": {
+    "LightGBM": {
+      "accuracy": 96.68,
+      "precision": 96.43,
+      "recall": 96.94,
+      "f1": 96.68,
+      "auc_roc": 99.41,
+      "n_train": 9144,
+      "n_test": 2286,
+      "n_features": 87
+    },
+    "XGBoost": {
+      "accuracy": 96.72,
+      "precision": 96.27,
+      "recall": 97.2,
+      "f1": 96.73,
+      "auc_roc": 99.44,
+      "n_train": 9144,
+      "n_test": 2286,
+      "n_features": 87
+    },
+    "RandomForest": {
+      "accuracy": 95.84,
+      "precision": 95.49,
+      "recall": 96.24,
+      "f1": 95.86,
+      "auc_roc": 99.23,
+      "n_train": 9144,
+      "n_test": 2286,
+      "n_features": 87
+    }
+  },
+  "Phishing_Legitimate": {
+    "LightGBM": {
+      "accuracy": 100.0,
+      "precision": 100.0,
+      "recall": 100.0,
+      "f1": 100.0,
+      "auc_roc": 100.0,
+      "n_train": 8000,
+      "n_test": 2000,
+      "n_features": 49
+    },
+    "XGBoost": {
+      "accuracy": 100.0,
+      "precision": 100.0,
+      "recall": 100.0,
+      "f1": 100.0,
+      "auc_roc": 100.0,
+      "n_train": 8000,
+      "n_test": 2000,
+      "n_features": 49
+    },
+    "RandomForest": {
+      "accuracy": 100.0,
+      "precision": 100.0,
+      "recall": 100.0,
+      "f1": 100.0,
+      "auc_roc": 100.0,
+      "n_train": 8000,
+      "n_test": 2000,
+      "n_features": 49
+    }
+  }
+}

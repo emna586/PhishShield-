@@ -1,0 +1,18 @@
+{
+  "accuracies": {
+    "XGBoost": 0.987473,
+    "LightGBM": 0.987829,
+    "RandomForest": 0.986424
+  },
+  "anova_result": {
+    "F": 2.363071,
+    "p_value": 0.113313
+  },
+  "significant": false,
+  "conclusion": "L'ANOVA ne revele PAS de difference significative entre les modeles (F=2.3631, p=0.1133 >= 0.05). Les differences observees (98.78% vs 98.64%) pourraient etre dues au hasard. Les trois modeles sont statistiquement equivalents sur ce dataset.",
+  "ranking": [
+    "LightGBM",
+    "XGBoost",
+    "RandomForest"
+  ]
+}

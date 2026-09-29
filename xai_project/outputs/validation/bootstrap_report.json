@@ -1,0 +1,48 @@
+{
+  "XGBoost": {
+    "mean_accuracy": 0.988015,
+    "std_accuracy": 0.000412,
+    "ci_lower": 0.987186,
+    "ci_upper": 0.988721,
+    "ci_95": [
+      0.987186,
+      0.988721
+    ],
+    "baseline_acc": 0.988522,
+    "n_bootstrap": 200
+  },
+  "LightGBM": {
+    "mean_accuracy": 0.988642,
+    "std_accuracy": 0.000418,
+    "ci_lower": 0.987877,
+    "ci_upper": 0.989512,
+    "ci_95": [
+      0.987877,
+      0.989512
+    ],
+    "baseline_acc": 0.989066,
+    "n_bootstrap": 200
+  },
+  "RandomForest": {
+    "mean_accuracy": 0.987846,
+    "std_accuracy": 0.000324,
+    "ci_lower": 0.987235,
+    "ci_upper": 0.988474,
+    "ci_95": [
+      0.987235,
+      0.988474
+    ],
+    "baseline_acc": 0.988275,
+    "n_bootstrap": 200
+  },
+  "overlap_analysis": {
+    "XGBoost vs LightGBM": "IC se chevauchent (pas de diff. significative)",
+    "XGBoost vs RandomForest": "IC se chevauchent (pas de diff. significative)",
+    "LightGBM vs RandomForest": "IC se chevauchent (pas de diff. significative)"
+  },
+  "ranking": [
+    "LightGBM",
+    "XGBoost",
+    "RandomForest"
+  ]
+}

@@ -1,0 +1,130 @@
+{
+  "PhishFOE": {
+    "MLP": {
+      "accuracy": 98.12,
+      "precision": 98.63,
+      "recall": 97.52,
+      "f1": 98.07,
+      "auc_roc": 99.79,
+      "n_train": 80850,
+      "n_test": 20213,
+      "n_features": 29
+    },
+    "CNN": {
+      "accuracy": 88.96,
+      "precision": 83.78,
+      "recall": 96.05,
+      "f1": 89.5,
+      "auc_roc": 96.41,
+      "n_train": 80850,
+      "n_test": 20213,
+      "n_features": 29
+    },
+    "LSTM": {
+      "accuracy": 88.36,
+      "precision": 89.33,
+      "recall": 86.57,
+      "f1": 87.93,
+      "auc_roc": 96.28,
+      "n_train": 80850,
+      "n_test": 20213,
+      "n_features": 29
+    }
+  },
+  "UCI": {
+    "MLP": {
+      "accuracy": 96.43,
+      "precision": 96.08,
+      "recall": 97.56,
+      "f1": 96.82,
+      "auc_roc": 99.56,
+      "n_train": 8844,
+      "n_test": 2211,
+      "n_features": 30
+    },
+    "CNN": {
+      "accuracy": 64.9,
+      "precision": 63.6,
+      "recall": 86.43,
+      "f1": 73.28,
+      "auc_roc": 79.79,
+      "n_train": 8844,
+      "n_test": 2211,
+      "n_features": 30
+    },
+    "LSTM": {
+      "accuracy": 71.42,
+      "precision": 86.22,
+      "recall": 57.92,
+      "f1": 69.29,
+      "auc_roc": 77.94,
+      "n_train": 8844,
+      "n_test": 2211,
+      "n_features": 30
+    }
+  },
+  "dataset_phishing": {
+    "MLP": {
+      "accuracy": 96.06,
+      "precision": 96.22,
+      "recall": 95.89,
+      "f1": 96.06,
+      "auc_roc": 99.1,
+      "n_train": 9144,
+      "n_test": 2286,
+      "n_features": 87
+    },
+    "CNN": {
+      "accuracy": 64.83,
+      "precision": 76.53,
+      "recall": 42.78,
+      "f1": 54.88,
+      "auc_roc": 68.25,
+      "n_train": 9144,
+      "n_test": 2286,
+      "n_features": 87
+    },
+    "LSTM": {
+      "accuracy": 68.85,
+      "precision": 71.7,
+      "recall": 62.29,
+      "f1": 66.67,
+      "auc_roc": 75.03,
+      "n_train": 9144,
+      "n_test": 2286,
+      "n_features": 87
+    }
+  },
+  "Phishing_Legitimate": {
+    "MLP": {
+      "accuracy": 99.65,
+      "precision": 99.6,
+      "recall": 99.7,
+      "f1": 99.65,
+      "auc_roc": 100.0,
+      "n_train": 8000,
+      "n_test": 2000,
+      "n_features": 49
+    },
+    "CNN": {
+      "accuracy": 60.85,
+      "precision": 66.82,
+      "recall": 43.1,
+      "f1": 52.4,
+      "auc_roc": 68.11,
+      "n_train": 8000,
+      "n_test": 2000,
+      "n_features": 49
+    },
+    "LSTM": {
+      "accuracy": 65.25,
+      "precision": 64.13,
+      "recall": 69.2,
+      "f1": 66.57,
+      "auc_roc": 69.39,
+      "n_train": 8000,
+      "n_test": 2000,
+      "n_features": 49
+    }
+  }
+}

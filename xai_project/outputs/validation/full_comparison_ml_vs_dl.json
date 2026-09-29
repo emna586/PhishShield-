@@ -1,0 +1,62 @@
+{
+  "LightGBM (ML)": {
+    "accuracy": 98.91,
+    "precision": 99.05,
+    "recall": 98.72,
+    "f1": 98.88,
+    "auc_roc": 99.89,
+    "fp": 94,
+    "fn": 127
+  },
+  "XGBoost (ML)": {
+    "accuracy": 98.85,
+    "precision": 99.05,
+    "recall": 98.61,
+    "f1": 98.83,
+    "auc_roc": 99.88,
+    "fp": 94,
+    "fn": 138
+  },
+  "RandomForest (ML)": {
+    "accuracy": 98.83,
+    "precision": 99.16,
+    "recall": 98.44,
+    "f1": 98.8,
+    "auc_roc": 99.89,
+    "fp": 83,
+    "fn": 154
+  },
+  "MLP": {
+    "accuracy": 98.33,
+    "precision": 98.57,
+    "recall": 98.02,
+    "f1": 98.29,
+    "auc_roc": 99.81,
+    "fp": 141,
+    "fn": 196,
+    "tp": 9702,
+    "tn": 10174
+  },
+  "CNN": {
+    "accuracy": 98.19,
+    "precision": 98.29,
+    "recall": 98.01,
+    "f1": 98.15,
+    "auc_roc": 99.8,
+    "fp": 169,
+    "fn": 197,
+    "tp": 9701,
+    "tn": 10146
+  },
+  "LSTM": {
+    "accuracy": 97.9,
+    "precision": 98.2,
+    "recall": 97.49,
+    "f1": 97.85,
+    "auc_roc": 99.73,
+    "fp": 177,
+    "fn": 248,
+    "tp": 9650,
+    "tn": 10138
+  }
+}

@@ -1,0 +1,74 @@
+{
+  "XGBoost": {
+    "accuracy": 98.8522,
+    "precision": 99.0461,
+    "recall": 98.6058,
+    "f1": 98.8254,
+    "auc_roc": 99.8837,
+    "TP": 9760,
+    "TN": 10221,
+    "FP": 94,
+    "FN": 138,
+    "type": "ML"
+  },
+  "LightGBM": {
+    "accuracy": 98.9066,
+    "precision": 99.0471,
+    "recall": 98.7169,
+    "f1": 98.8817,
+    "auc_roc": 99.889,
+    "TP": 9771,
+    "TN": 10221,
+    "FP": 94,
+    "FN": 127,
+    "type": "ML"
+  },
+  "RandomForest": {
+    "accuracy": 98.8275,
+    "precision": 99.1554,
+    "recall": 98.4441,
+    "f1": 98.7985,
+    "auc_roc": 99.8926,
+    "TP": 9744,
+    "TN": 10232,
+    "FP": 83,
+    "FN": 154,
+    "type": "ML"
+  },
+  "MLP": {
+    "accuracy": 98.3328,
+    "precision": 98.5675,
+    "recall": 98.0198,
+    "f1": 98.2929,
+    "auc_roc": 99.8062,
+    "TP": 9702,
+    "TN": 10174,
+    "FP": 141,
+    "FN": 196,
+    "type": "DL"
+  },
+  "CNN": {
+    "accuracy": 98.1893,
+    "precision": 98.2877,
+    "recall": 98.0097,
+    "f1": 98.1485,
+    "auc_roc": 99.7955,
+    "TP": 9701,
+    "TN": 10146,
+    "FP": 169,
+    "FN": 197,
+    "type": "DL"
+  },
+  "LSTM": {
+    "accuracy": 97.8974,
+    "precision": 98.1988,
+    "recall": 97.4944,
+    "f1": 97.8454,
+    "auc_roc": 99.7275,
+    "TP": 9650,
+    "TN": 10138,
+    "FP": 177,
+    "FN": 248,
+    "type": "DL"
+  }
+}

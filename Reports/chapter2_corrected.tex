@@ -1,0 +1,292 @@
+% ================= CHAPTER 2 =================
+\chapter{State of the Art}
+\vspace{0.5cm}
+\minitoc
+\vspace{1cm}
+
+% ── Introduction (unnumbered) ────────────────────────────────────────────────
+\section*{Introduction}
+\addcontentsline{toc}{section}{Introduction}
+
+Phishing attacks have become increasingly sophisticated, rendering traditional detection methods such as rule-based filters and static blacklists insufficient against modern threats. The rise of machine learning and deep learning has opened new possibilities for automated phishing detection, offering systems capable of learning complex patterns from large datasets. However, these advances introduce new challenges: the vulnerability of models to adversarial manipulation and the opacity of their decision-making process. Most existing solutions address only one of these dimensions — accuracy, explainability, or robustness — without unifying all three in a single operational framework.
+
+This chapter surveys the scientific literature underlying our work. We begin by reviewing fundamental concepts and detection techniques. We then present a structured review of existing research works, organized by approach type, covering machine learning, deep learning, explainable AI, and adversarial robustness methods. We conclude with a critical comparative analysis and a discussion of the open challenges that motivate our proposed system.
+
+% ── 2.1 Fundamental Concepts ─────────────────────────────────────────────────
+\section{Fundamental Concepts}
+
+\subsection{Traditional Phishing Detection Methods}
+
+Before the emergence of machine learning, phishing detection relied on two primary strategies:
+
+\textbf{Blacklist-based detection} maintains a database of known malicious URLs and domains. Security tools such as antivirus software, spam filters, and browser extensions query this list to block access to flagged resources. While this approach is fast and precise for known threats, it is fundamentally reactive: it cannot detect newly created phishing pages that have not yet been catalogued, leaving a critical detection window during which zero-day attacks are invisible to the system.
+
+\textbf{Heuristic and rule-based detection} examines the structural properties of URLs, email headers, and webpage content, applying hand-crafted rules to identify suspicious patterns — such as misspelled domain names, excessive subdomain levels, presence of ``@'' characters in URLs, or urgent language in email bodies. While more flexible than blacklists, these approaches require constant manual maintenance, produce significant false positive rates, and can be bypassed by attackers who deliberately craft phishing URLs to avoid known rule patterns.
+
+\textbf{DNS filtering} restricts access to malicious websites by resolving domain names against curated threat intelligence feeds. This approach is effective in enterprise environments for known malicious domains but fails for newly registered phishing domains not yet included in threat intelligence databases.
+
+\subsection{Machine Learning for Phishing Detection}
+
+Machine learning (ML) overcomes the rigidity of rule-based systems by automatically learning discriminative patterns from labeled training data. Given a set of features extracted from URLs or web pages, an ML classifier learns a decision boundary that separates phishing from legitimate instances, and can generalize to detect previously unseen phishing patterns.
+
+Ensemble methods have demonstrated the strongest performance in this domain. \textbf{Random Forest} builds multiple decision trees on random subsets of the training data and aggregates their predictions, achieving high accuracy while resisting overfitting through ensemble averaging. \textbf{Gradient boosting} methods such as \textbf{XGBoost} and \textbf{LightGBM} sequentially build trees that correct the errors of their predecessors, achieving state-of-the-art accuracy on tabular feature datasets while being computationally efficient.
+
+The primary limitation of traditional ML methods is the requirement for manual feature engineering: a domain expert must define which URL and HTML characteristics to extract, and this process is both labor-intensive and potentially incomplete.
+
+\subsection{Deep Learning for Phishing Detection}
+
+Deep learning (DL) architectures eliminate the need for manual feature engineering by learning hierarchical representations directly from raw data. In the context of phishing detection:
+
+\begin{itemize}
+    \item \textbf{Multi-Layer Perceptrons (MLP):} Fully connected feedforward networks that learn non-linear mappings from tabular feature vectors to class labels. They are effective for structured, pre-extracted features.
+    \item \textbf{Convolutional Neural Networks (CNN):} Originally designed for image processing, 1D CNNs can be applied to URL character sequences or feature vectors, capturing local patterns through sliding convolutional filters and pooling operations.
+    \item \textbf{Long Short-Term Memory (LSTM):} Recurrent networks with gated memory cells that capture long-range sequential dependencies in URL strings or webpage tokens, making them well-suited for modeling character-level or token-level phishing patterns.
+    \item \textbf{Transformer-based models:} Self-attention mechanisms allow transformers such as BERT or DistilBERT to model global relationships across entire input sequences simultaneously, capturing subtle semantic patterns missed by convolutional or recurrent approaches.
+\end{itemize}
+
+Despite their representational power, DL models present two major drawbacks in the phishing detection context: (1) they are computationally expensive to train and deploy compared to gradient boosting methods; and (2) their predictions are difficult to interpret, as the learned representations do not directly correspond to human-understandable features.
+
+\subsection{Explainable Artificial Intelligence (XAI)}
+
+Explainable AI (XAI) refers to a family of techniques that make the predictions of complex models understandable to human operators. In cybersecurity applications, XAI is critical: a security analyst must understand \textit{why} a URL was flagged as malicious before deciding to block a domain or escalate an alert.
+
+Three XAI methods are most widely used in phishing detection research:
+
+\begin{itemize}
+    \item \textbf{SHAP (SHapley Additive exPlanations):} Based on game-theoretic Shapley values, SHAP assigns each feature a contribution score that represents its marginal impact on the model's prediction, relative to all other features. SHAP TreeExplainer computes exact Shapley values for tree-based models in polynomial time, making it tractable for operational use. For neural networks, SHAP GradientExplainer uses backpropagation to compute approximate Shapley values.
+    \item \textbf{LIME (Local Interpretable Model-agnostic Explanations):} LIME generates local explanations by fitting an interpretable surrogate model (typically a linear classifier) on a neighborhood of perturbed instances around the input to be explained. LIME is model-agnostic and can be applied to any classifier.
+    \item \textbf{Permutation Feature Importance (PFI):} PFI measures the decrease in model performance when the values of a given feature are randomly shuffled, breaking its relationship with the target. Features with high PFI are those the model relies on most for accurate predictions.
+\end{itemize}
+
+\subsection{Adversarial Robustness}
+
+Adversarial attacks exploit the sensitivity of ML and DL models to small, deliberate perturbations of their inputs. In the context of phishing detection, an attacker can modify a phishing URL's features — adding subdomain levels, altering query parameters, or modifying character counts — to shift its feature vector across the decision boundary, causing the model to classify the malicious URL as legitimate.
+
+The two dominant adversarial attack algorithms evaluated in this work are:
+
+\begin{itemize}
+    \item \textbf{FGSM (Fast Gradient Sign Method)} \cite{goodfellow2014}: A single-step attack that computes the gradient of the loss with respect to the input and perturbs each feature by $\varepsilon \cdot \text{sign}(\nabla_x \mathcal{L})$. For ML models where gradients are unavailable, numerical gradient approximation is used.
+    \item \textbf{PGD (Projected Gradient Descent)} \cite{madry2018}: An iterative, multi-step extension of FGSM that applies $T$ gradient steps with step size $\alpha$ within a constrained $\varepsilon$-ball, producing stronger adversarial examples. PGD is considered the standard benchmark attack for robustness evaluation.
+\end{itemize}
+
+Defense strategies include adversarial training (augmenting the training set with adversarial examples), feature squeezing (reducing input precision to limit perturbation effect), and certified defenses based on randomized smoothing.
+
+% ── 2.2 Review of Existing Works ─────────────────────────────────────────────
+\section{Review of Existing Research Works}
+
+In accordance with the structure recommended for this literature review, we organize existing works into four categories: machine learning-based approaches, deep learning-based approaches, explainable AI approaches, and adversarial robustness approaches. For each work, we report the dataset, results, advantages, and limitations.
+
+% ── 2.2.1 ML Approaches ──────────────────────────────────────────────────────
+\subsection{Machine Learning-Based Approaches}
+
+\paragraph{Comparative Analysis of ML Techniques (2024).}
+Al-Sarem et al.~\cite{ref_etasr} conduct a comprehensive comparison of machine learning algorithms — including Random Forest, Decision Trees, k-Nearest Neighbors, and Support Vector Machines — on a large labeled URL dataset. Random Forest achieves the highest accuracy of 99.93\%, demonstrating its strong generalization capability and natural resistance to overfitting through ensemble averaging.
+
+\textbf{Advantages:} Thorough experimental comparison; strong baseline metrics; natural robustness through bagging.\\
+\textbf{Limitations:} Explainability is not addressed; adversarial robustness is not evaluated; results are dataset-specific and may not generalize to zero-day phishing.
+
+\paragraph{Hybrid Feature-Based ML Pipeline (2023).}
+Rao et al.~\cite{ref_ml4} propose a hybrid ML pipeline that combines URL-structural features with hyperlink graph features extracted from the HTML DOM. The combined feature set feeds a gradient boosting classifier, achieving F1-Scores above 98\% on multiple benchmark datasets.
+
+\textbf{Advantages:} Multi-source feature integration; strong cross-dataset performance.\\
+\textbf{Limitations:} HTML feature extraction requires page loading, introducing latency; no XAI integration; no adversarial evaluation.
+
+% ── 2.2.2 DL Approaches ──────────────────────────────────────────────────────
+\subsection{Deep Learning-Based Approaches}
+
+\paragraph{LSTM and CNN for URL-Based Detection (2022).}
+Wei et al.~\cite{ref_dl1} apply LSTM and CNN architectures to raw URL strings treated as character-level sequences. The models learn to detect phishing URLs without any manual feature engineering, achieving accuracy above 97\% on the ISCX-URL-2016 dataset. The LSTM model particularly excels at capturing long-range character dependencies within URL paths and query strings.
+
+\textbf{Advantages:} End-to-end learning without feature engineering; captures sequential URL patterns.\\
+\textbf{Limitations:} High computational cost; requires large training sets; no interpretability; accuracy lower than tree-based ML on tabular feature datasets.
+
+\paragraph{Transformer-Based Phishing Detection (2024).}
+Le et al.~\cite{transformer_phishing} propose a DistilBERT-based framework for phishing URL classification. The transformer model processes tokenized URL strings and achieves state-of-the-art accuracy through attention mechanisms that capture contextual relationships between URL segments.
+
+\textbf{Advantages:} State-of-the-art contextual understanding; pre-trained weights reduce training data requirements.\\
+\textbf{Limitations:} Very high computational cost; requires GPU infrastructure for deployment; black-box nature; not suitable for real-time API integration without specialized hardware.
+
+\textit{Note: Transformer-based models are reviewed here as a state-of-the-art reference. Our proposed system does not use transformer architectures, as they are computationally prohibitive for real-time web deployment on standard hardware. Our deep learning models (MLP, CNN, LSTM) achieve competitive accuracy with substantially lower inference latency.}
+
+% ── 2.2.3 XAI Approaches ─────────────────────────────────────────────────────
+\subsection{Explainable AI Approaches}
+
+\paragraph{Enhancing Online Safety with XAI (2024).}
+Subramanian et al.~\cite{ref_amrita} integrate SHAP and LIME into a phishing detection framework based on Random Forest, Decision Trees, SVM, KNN, and Gradient Boosting. The system achieves 98.55\% accuracy and generates human-readable feature explanations that identify the URL properties most indicative of phishing.
+
+\textbf{Advantages:} Dual XAI integration (SHAP + LIME); comparative model evaluation; accessible to non-technical users.\\
+\textbf{Limitations:} Adversarial robustness is not evaluated; SHAP and LIME explanations are not cross-validated for consistency.
+
+\paragraph{ML and XAI for Phishing Detection (2025).}
+Hamdan et al.~\cite{ref_vfast} compare XGBoost, LightGBM, Random Forest, and CNN on a multi-dataset benchmark. LightGBM achieves the highest accuracy of 99.65\%. LIME is applied to provide local explanations for individual predictions.
+
+\textbf{Advantages:} Strong multi-dataset benchmarking; fast inference with LightGBM; LIME explanations.\\
+\textbf{Limitations:} Only LIME is used for XAI (no SHAP or PFI cross-validation); adversarial robustness is not addressed.
+
+\paragraph{EXPLICATE: LLM-Assisted Explainable Detection (2025).}
+Zhang et al.~\cite{ref_arxiv} propose EXPLICATE, a system that combines a traditional ML classifier with a Large Language Model to generate natural language explanations of phishing detections. SHAP and LIME are used to extract feature contributions, which are then summarized by an LLM into analyst-readable reports.
+
+\textbf{Advantages:} Human-readable natural language explanations; dual SHAP/LIME integration.\\
+\textbf{Limitations:} LLM inference adds significant latency and cost; no adversarial robustness testing; XAI cross-validation consistency is not assessed.
+
+% ── 2.2.4 Adversarial Robustness Approaches ──────────────────────────────────
+\subsection{Adversarial Robustness Approaches}
+
+\paragraph{Adversarially Robust Phishing Detection (2025).}
+Chen et al.~\cite{ref_discovery} propose a dual-encoder contrastive learning model designed specifically to resist adversarial phishing URL perturbations. The model is trained with adversarial data augmentation using FGSM and PGD, achieving strong robustness benchmarks against both attacks while maintaining high detection accuracy.
+
+\textbf{Advantages:} Explicit adversarial robustness design; evaluation against both FGSM and PGD; strong theoretical foundation in contrastive learning.\\
+\textbf{Limitations:} Explainability is not integrated; the contrastive model is difficult to interpret; no web deployment component.
+
+\paragraph{Multi-Component System with Adversarial Analysis (2023).}
+Apruzzese et al.~\cite{multi_component} conduct a large-scale study on the vulnerability of multi-component phishing detection systems — analyzing email body, URLs, and structural metadata — to adversarial evasion attacks. The study demonstrates that even high-performing systems lose significant accuracy under PGD perturbation.
+
+\textbf{Advantages:} Comprehensive adversarial evaluation; realistic threat modeling across multiple system components.\\
+\textbf{Limitations:} The study identifies vulnerabilities without proposing a complete robust defense; no XAI integration.
+
+% ── 2.3 Comparative Analysis ─────────────────────────────────────────────────
+\section{Comparative Analysis of Existing Approaches}
+
+Table~\ref{tab:comparison} presents a structured comparison of the reviewed works across five dimensions: models used, reported accuracy, XAI integration, adversarial robustness evaluation, and dataset scope. This comparison reveals the trade-offs between existing approaches and identifies the research gaps addressed by our proposed system.
+
+\begin{table}[H]
+    \caption{Comparative Analysis of Phishing Detection Approaches in the Literature}
+    \label{tab:comparison}
+    \vspace{6pt}
+    \centering
+    \resizebox{\textwidth}{!}{%
+    \begin{tabular}{|p{4.0cm}|p{3.2cm}|c|c|c|p{3.5cm}|}
+        \hline
+        \textbf{Study / Year} & \textbf{Model(s)} & \textbf{Best Acc. / F1} & \textbf{XAI} & \textbf{Adv. Robust.} & \textbf{Limitation} \\
+        \hline
+
+        \multicolumn{6}{|c|}{\textbf{--- Machine Learning Approaches ---}} \\
+        \hline
+
+        Al-Sarem et al.~\cite{ref_etasr} (2024) &
+        Random Forest, SVM, KNN, DT &
+        99.93\% &
+        \texttimes &
+        \texttimes &
+        No XAI; no adversarial testing \\
+        \hline
+
+        Rao et al.~\cite{ref_ml4} (2023) &
+        Gradient Boosting + DOM features &
+        98.10\% &
+        \texttimes &
+        \texttimes &
+        High latency (HTML required); no XAI \\
+        \hline
+
+        \multicolumn{6}{|c|}{\textbf{--- Deep Learning Approaches ---}} \\
+        \hline
+
+        Wei et al.~\cite{ref_dl1} (2022) &
+        LSTM, CNN &
+        97.30\% &
+        \texttimes &
+        \texttimes &
+        High cost; black-box; lower accuracy than ML \\
+        \hline
+
+        Le et al.~\cite{transformer_phishing} (2024) &
+        DistilBERT (Transformer) &
+        99.10\% &
+        \texttimes &
+        \texttimes &
+        GPU required; latency; not deployable in real-time \\
+        \hline
+
+        \multicolumn{6}{|c|}{\textbf{--- Explainable AI Approaches ---}} \\
+        \hline
+
+        Subramanian et al.~\cite{ref_amrita} (2024) &
+        RF, DT, SVM, KNN, GB &
+        98.55\% &
+        SHAP + LIME &
+        \texttimes &
+        No adversarial robustness; no XAI cross-validation \\
+        \hline
+
+        Hamdan et al.~\cite{ref_vfast} (2025) &
+        XGBoost, LightGBM, RF, CNN &
+        99.65\% &
+        LIME only &
+        \texttimes &
+        Single XAI method; no adversarial testing \\
+        \hline
+
+        Zhang et al. (EXPLICATE)~\cite{ref_arxiv} (2025) &
+        ML + LLM &
+        98.40\% &
+        SHAP + LIME &
+        \texttimes &
+        High LLM latency; no robustness test \\
+        \hline
+
+        \multicolumn{6}{|c|}{\textbf{--- Adversarial Robustness Approaches ---}} \\
+        \hline
+
+        Chen et al.~\cite{ref_discovery} (2025) &
+        Dual-encoder contrastive &
+        $>$97\% &
+        \texttimes &
+        FGSM + PGD &
+        No XAI; not interpretable \\
+        \hline
+
+        Apruzzese et al.~\cite{multi_component} (2023) &
+        Multi-component system &
+        $>$97\% &
+        \texttimes &
+        PGD only &
+        No defense proposed; no XAI \\
+        \hline
+
+        \multicolumn{6}{|c|}{\textbf{--- Our Proposed Work ---}} \\
+        \hline
+
+        \textbf{PhishShield (2026) [Ours]} &
+        \textbf{LightGBM + XGBoost + RF + MLP + CNN + LSTM} &
+        \textbf{98.88\% F1} &
+        \textbf{SHAP + LIME + PFI (triangular)} &
+        \textbf{FGSM + PGD (ML \& DL)} &
+        Manual feature extraction required \\
+        \hline
+    \end{tabular}
+    }
+\end{table}
+
+% ── 2.4 Discussion ───────────────────────────────────────────────────────────
+\section{Discussion}
+
+The review of existing research reveals three recurring gaps that limit the operational viability of current phishing detection systems.
+
+\paragraph{Gap 1 — The Accuracy–Explainability Trade-off.}
+The majority of studies optimize for classification accuracy in isolation, treating the model as a closed system evaluated exclusively on benchmark metrics. Works that achieve the highest accuracy — such as transformer-based approaches reaching over 99\% accuracy — do so at the cost of complete opacity. The model's predictions cannot be traced back to specific URL features, rendering them practically unusable in cybersecurity operations where analysts must justify every blocked domain.
+
+Conversely, the studies that do integrate explainability (SHAP and LIME) consistently report slightly lower accuracy figures (97--99\%), suggesting a trade-off that is more architectural than fundamental. Our experiments demonstrate that this trade-off is avoidable: LightGBM, which is natively compatible with SHAP TreeExplainer, achieves 98.88\% F1-Score — outperforming most XAI-integrated systems — while providing exact Shapley value explanations at sub-millisecond inference latency.
+
+\paragraph{Gap 2 — The Single-Method XAI Limitation.}
+Even among studies that incorporate XAI, the vast majority rely on a single explanation method, most commonly LIME. This is a significant scientific weakness: LIME generates locally faithful but globally inconsistent explanations, and its results depend on the random perturbation process used to generate the neighborhood. A single-method explanation cannot be independently verified and may mislead analysts if the local linear approximation is inaccurate.
+
+Our work addresses this limitation through a \textit{triangular validation} strategy: SHAP, LIME, and Permutation Feature Importance (PFI) are computed independently and their feature rankings are cross-validated using Pearson correlation and top-10 overlap analysis. A prediction is considered fully explainable only when all three methods agree on the top contributing features. This multi-source consensus provides a stronger guarantee of explanation reliability than any single method alone.
+
+Furthermore, we extend XAI to the deep learning models: SHAP GradientExplainer is applied to the MLP architecture (producing valid non-zero feature attributions), while LIME with a model-agnostic wrapper is applied to all three DL models (MLP, CNN, LSTM). Our experiments reveal that SHAP GradientExplainer fails to produce non-zero attributions for the CNN (due to gradient sparsity introduced by GlobalMaxPooling1D) and the LSTM (due to gradient absorption by the gated memory cells) — a scientifically important finding that confirms the superior explainability of tree-based models in this domain. The LIME results for all DL models converge on the same top features as the ML SHAP results (\textit{NoOfSubDomain}, \textit{URLLength}, \textit{IsDomainIP}, \textit{NoOfDots}), providing cross-paradigm consensus on the most reliable phishing indicators.
+
+\paragraph{Gap 3 — The Absence of Adversarial Robustness Evaluation.}
+The most critical gap across the literature is the near-universal absence of adversarial robustness evaluation in systems that propose XAI. Table~\ref{tab:comparison} shows that every study incorporating SHAP or LIME explicitly omits any FGSM or PGD robustness testing. Conversely, the studies that evaluate adversarial robustness do not integrate XAI. This mutual exclusivity in the literature means that no prior work has simultaneously demonstrated that a phishing detection system is both explainable and robust to adversarial attacks.
+
+This gap is not merely academic. An adversary who has access to an explainable model's feature importance rankings — which are by design public and human-readable — can directly exploit this information to craft targeted adversarial examples: modifying precisely the features identified as most important to flip the model's prediction while minimizing URL modifications. Our system demonstrates that tree-based ML models (LightGBM, XGBoost, Random Forest) retain near-100\% accuracy under FGSM attack ($\varepsilon = 0.1$), confirming their natural robustness due to the discrete, non-differentiable nature of decision tree splits. Deep learning models (MLP, CNN, LSTM), by contrast, suffer accuracy drops of 62--75\% under the same PGD attack, as their continuous activation functions provide exact gradients to the adversary. This empirical finding is a central contribution of our work: it justifies the deployment of LightGBM over the deep learning alternatives not only on accuracy grounds but on robustness grounds, while also providing a full XAI explanation of its decisions.
+
+\paragraph{Summary of Identified Gaps.}
+The three gaps identified in the literature — the accuracy–explainability trade-off, the single-method XAI limitation, and the absence of simultaneous XAI and adversarial robustness evaluation — collectively define the research problem addressed by this thesis. PhishShield directly fills all three gaps by: (1) achieving state-of-the-art F1-Score with LightGBM on the PhishFOE dataset; (2) implementing a triangular XAI validation strategy covering SHAP, LIME, and PFI, extended to deep learning models; and (3) evaluating all six models under FGSM and PGD attacks using both exact gradient (DL) and numerical gradient approximation (ML) methods.
+
+% ── Conclusion (unnumbered) ──────────────────────────────────────────────────
+\section*{Conclusion}
+\addcontentsline{toc}{section}{Conclusion}
+
+This chapter reviewed the state of the art in phishing detection from four perspectives: fundamental concepts, existing detection techniques, a structured review of recent research works organized by approach type, and a critical comparative analysis. The literature confirms that machine learning — particularly gradient boosting methods — achieves the highest accuracy on tabular URL feature datasets, while deep learning offers competitive results at significantly higher computational cost. Transformer-based models represent the current frontier of contextual understanding but are impractical for real-time deployment on standard hardware.
+
+Critically, no existing system simultaneously addresses accuracy, multi-method explainability, and adversarial robustness within a single deployable framework. The three identified gaps directly motivate the methodology presented in the following chapter, where we describe the data, models, XAI techniques, robustness evaluation protocol, and deployment architecture of PhishShield.

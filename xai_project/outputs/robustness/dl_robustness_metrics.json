@@ -1,0 +1,137 @@
+{
+  "MLP": {
+    "model_name": "MLP",
+    "type": "DL",
+    "baseline_accuracy": 0.983328,
+    "fgsm_accuracy": 0.436,
+    "pgd_accuracy": 0.36,
+    "fgsm_drop": 0.547328,
+    "pgd_drop": 0.623328,
+    "robustness_score": 0.593109,
+    "robustness_level": "Very Vulnerable",
+    "pgd_accuracy_history": [
+      {
+        "step": 5,
+        "accuracy": 0.725
+      },
+      {
+        "step": 10,
+        "accuracy": 0.56
+      },
+      {
+        "step": 15,
+        "accuracy": 0.415
+      },
+      {
+        "step": 20,
+        "accuracy": 0.37
+      },
+      {
+        "step": 25,
+        "accuracy": 0.37
+      },
+      {
+        "step": 30,
+        "accuracy": 0.36
+      },
+      {
+        "step": 35,
+        "accuracy": 0.36
+      },
+      {
+        "step": 40,
+        "accuracy": 0.36
+      }
+    ]
+  },
+  "CNN": {
+    "model_name": "CNN",
+    "type": "DL",
+    "baseline_accuracy": 0.981893,
+    "fgsm_accuracy": 0.586,
+    "pgd_accuracy": 0.365,
+    "fgsm_drop": 0.395893,
+    "pgd_drop": 0.616893,
+    "robustness_score": 0.644298,
+    "robustness_level": "Very Vulnerable",
+    "pgd_accuracy_history": [
+      {
+        "step": 5,
+        "accuracy": 0.72
+      },
+      {
+        "step": 10,
+        "accuracy": 0.525
+      },
+      {
+        "step": 15,
+        "accuracy": 0.425
+      },
+      {
+        "step": 20,
+        "accuracy": 0.395
+      },
+      {
+        "step": 25,
+        "accuracy": 0.38
+      },
+      {
+        "step": 30,
+        "accuracy": 0.37
+      },
+      {
+        "step": 35,
+        "accuracy": 0.37
+      },
+      {
+        "step": 40,
+        "accuracy": 0.365
+      }
+    ]
+  },
+  "LSTM": {
+    "model_name": "LSTM",
+    "type": "DL",
+    "baseline_accuracy": 0.978974,
+    "fgsm_accuracy": 0.492,
+    "pgd_accuracy": 0.23,
+    "fgsm_drop": 0.486974,
+    "pgd_drop": 0.748974,
+    "robustness_score": 0.566991,
+    "robustness_level": "Very Vulnerable",
+    "pgd_accuracy_history": [
+      {
+        "step": 5,
+        "accuracy": 0.37
+      },
+      {
+        "step": 10,
+        "accuracy": 0.26
+      },
+      {
+        "step": 15,
+        "accuracy": 0.24
+      },
+      {
+        "step": 20,
+        "accuracy": 0.23
+      },
+      {
+        "step": 25,
+        "accuracy": 0.22
+      },
+      {
+        "step": 30,
+        "accuracy": 0.23
+      },
+      {
+        "step": 35,
+        "accuracy": 0.225
+      },
+      {
+        "step": 40,
+        "accuracy": 0.23
+      }
+    ]
+  }
+}

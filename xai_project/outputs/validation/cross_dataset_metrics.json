@@ -1,0 +1,125 @@
+{
+  "LightGBM": {
+    "phishfoe_test": {
+      "label": "LightGBM (PhishFOE test)",
+      "accuracy": 97.22,
+      "precision": 97.12,
+      "recall": 97.2,
+      "f1": 97.16,
+      "auc_roc": 99.67,
+      "TP": 9621,
+      "TN": 10030,
+      "FP": 285,
+      "FN": 277,
+      "n_samples": 20213
+    },
+    "uci": {
+      "label": "LightGBM (UCI)",
+      "accuracy": 29.4,
+      "precision": 39.48,
+      "recall": 50.24,
+      "f1": 44.21,
+      "auc_roc": 13.39,
+      "TP": 3093,
+      "TN": 157,
+      "FP": 4741,
+      "FN": 3064,
+      "n_samples": 11055
+    },
+    "dataset_phishing": {
+      "label": "LightGBM (dataset_phishing)",
+      "accuracy": 50.0,
+      "precision": 50.0,
+      "recall": 100.0,
+      "f1": 66.67,
+      "auc_roc": 73.77,
+      "TP": 5715,
+      "TN": 0,
+      "FP": 5715,
+      "FN": 0,
+      "n_samples": 11430
+    }
+  },
+  "XGBoost": {
+    "phishfoe_test": {
+      "label": "XGBoost (PhishFOE test)",
+      "accuracy": 97.11,
+      "precision": 96.97,
+      "recall": 97.12,
+      "f1": 97.05,
+      "auc_roc": 99.66,
+      "TP": 9613,
+      "TN": 10015,
+      "FP": 300,
+      "FN": 285,
+      "n_samples": 20213
+    },
+    "uci": {
+      "label": "XGBoost (UCI)",
+      "accuracy": 29.4,
+      "precision": 39.48,
+      "recall": 50.24,
+      "f1": 44.21,
+      "auc_roc": 13.16,
+      "TP": 3093,
+      "TN": 157,
+      "FP": 4741,
+      "FN": 3064,
+      "n_samples": 11055
+    },
+    "dataset_phishing": {
+      "label": "XGBoost (dataset_phishing)",
+      "accuracy": 50.0,
+      "precision": 50.0,
+      "recall": 100.0,
+      "f1": 66.67,
+      "auc_roc": 76.29,
+      "TP": 5715,
+      "TN": 0,
+      "FP": 5715,
+      "FN": 0,
+      "n_samples": 11430
+    }
+  },
+  "RandomForest": {
+    "phishfoe_test": {
+      "label": "RandomForest (PhishFOE test)",
+      "accuracy": 96.92,
+      "precision": 96.5,
+      "recall": 97.23,
+      "f1": 96.86,
+      "auc_roc": 99.62,
+      "TP": 9624,
+      "TN": 9966,
+      "FP": 349,
+      "FN": 274,
+      "n_samples": 20213
+    },
+    "uci": {
+      "label": "RandomForest (UCI)",
+      "accuracy": 38.76,
+      "precision": 46.57,
+      "recall": 67.61,
+      "f1": 55.15,
+      "auc_roc": 25.89,
+      "TP": 4163,
+      "TN": 122,
+      "FP": 4776,
+      "FN": 1994,
+      "n_samples": 11055
+    },
+    "dataset_phishing": {
+      "label": "RandomForest (dataset_phishing)",
+      "accuracy": 50.0,
+      "precision": 50.0,
+      "recall": 100.0,
+      "f1": 66.67,
+      "auc_roc": 79.5,
+      "TP": 5715,
+      "TN": 0,
+      "FP": 5715,
+      "FN": 0,
+      "n_samples": 11430
+    }
+  }
+}

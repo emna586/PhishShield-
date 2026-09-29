@@ -1,0 +1,15 @@
+﻿node_modules/
+.next/
+__pycache__/
+*.pyc
+.venv/
+venv/
+env/
+.env
+*.zip
+dataset/
+*.csv
+*.joblib
+*.h5
+*.keras
+

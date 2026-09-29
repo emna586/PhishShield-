@@ -1,0 +1,62 @@
+{
+  "xgboost": {
+    "model_name": "XGBoost",
+    "baseline": 0.9885222381635581,
+    "no_defense": {
+      "fgsm": 0.52,
+      "pgd": 0.4875
+    },
+    "squeezing": {
+      "fgsm": 0.52,
+      "pgd": 0.4875
+    },
+    "adv_training": {
+      "fgsm": 0.8866666666666667,
+      "pgd": 0.9
+    },
+    "combined": {
+      "fgsm": 0.8866666666666667,
+      "pgd": 0.9
+    }
+  },
+  "lightgbm": {
+    "model_name": "LightGBM",
+    "baseline": 0.9890664423885618,
+    "no_defense": {
+      "fgsm": 0.98,
+      "pgd": 0.925
+    },
+    "squeezing": {
+      "fgsm": 0.98,
+      "pgd": 0.925
+    },
+    "adv_training": {
+      "fgsm": 0.98,
+      "pgd": 0.9125
+    },
+    "combined": {
+      "fgsm": 0.98,
+      "pgd": 0.9125
+    }
+  },
+  "random_forest": {
+    "model_name": "Random Forest",
+    "baseline": 0.9882748726067382,
+    "no_defense": {
+      "fgsm": 0.86,
+      "pgd": 0.925
+    },
+    "squeezing": {
+      "fgsm": 0.8466666666666667,
+      "pgd": 0.9375
+    },
+    "adv_training": {
+      "fgsm": 0.9066666666666666,
+      "pgd": 0.9125
+    },
+    "combined": {
+      "fgsm": 0.8733333333333333,
+      "pgd": 0.9125
+    }
+  }
+}

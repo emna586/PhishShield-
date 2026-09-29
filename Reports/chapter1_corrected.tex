@@ -1,0 +1,349 @@
+% ================= CHAPTER 1 =================
+\chapter{Project Context and Specifications}
+\vspace{0.5cm}
+\minitoc
+\vspace{1cm}
+
+% ── Introduction (unnumbered — per supervisor remark 6) ──────────────────────
+\section*{Introduction}
+\addcontentsline{toc}{section}{Introduction}
+
+In this chapter, we establish the foundation of our phishing detection project. We begin by presenting the host research laboratory that supervised this work, followed by the context that motivated this research. We then define the concept of phishing, identify the two major technical challenges faced by current machine learning-based detection systems, and present our proposed solution. Finally, we specify the functional and non-functional requirements of the system and formalize the interactions between the actors through use case and activity diagrams.
+
+% ── 1.1 Host Company ─────────────────────────────────────────────────────────
+\section{Presentation of the Host Institution: REGIM-Lab}
+
+The Research Group on Intelligent Machines (REGIM-Lab) was established in 1997 by Professor Adel M.~Alimi at the National Engineering School of Sfax (ENIS), University of Sfax, Tunisia. Initially founded as a university research unit, it was officially recognized as a full research laboratory in 2011. Since May 2021, the laboratory has been directed by Dr.~Fadoua Drira.
+
+REGIM-Lab's core mission is to generate innovative scientific knowledge in the field of intelligent machines and artificial intelligence, contributing to societal and industrial development. The laboratory maintains active partnerships with national and international universities, research centers, and technology companies, producing high-impact publications and innovative software solutions.
+
+The research activity of REGIM-Lab is organized around four main axes:
+\begin{itemize}
+    \item \textbf{Deep Social Media Data Science:} Analysis of social networks, sentiment analysis, opinion mining, and community detection using deep learning.
+    \item \textbf{Deep Vision Data Science:} Computer vision, image recognition, object detection, and medical image analysis.
+    \item \textbf{Deep Multimodal Signal Data Science:} Processing of audio, speech, and physiological signals using multimodal deep learning architectures.
+    \item \textbf{Deep Textual Document Data Science:} Natural language processing, document classification, and Arabic text analysis.
+\end{itemize}
+
+This internship was carried out within REGIM-Lab under the supervision of Mrs.~Maha Charfeddine and Mr.~Chokri Ben Amar. The laboratory's strong expertise in machine learning, deep learning, and data science provided the ideal research environment for developing an advanced AI-powered phishing detection system.
+
+% ── 1.2 Context of the Project ───────────────────────────────────────────────
+\section{Context of the Project}
+
+The rapid expansion of digital services has made cybersecurity one of the most critical challenges of our time. Among the many forms of cyberattacks, phishing remains the most widespread and damaging. According to the Anti-Phishing Working Group (APWG), over 1.3 million phishing attacks were recorded in the first quarter of 2024 alone, a record number that underscores the urgency of developing more effective detection methods.
+
+Traditional defenses, such as rule-based filters and static blacklists, are reactive by nature: they can only block threats that have already been catalogued. Against zero-day phishing attacks — newly crafted malicious URLs that have never been seen before — these approaches are fundamentally insufficient.
+
+Machine learning has emerged as a promising alternative. By learning statistical patterns from large labeled datasets, ML models can generalize and detect previously unseen phishing pages with high accuracy. However, deploying such models in operational cybersecurity environments raises two fundamental challenges that this project directly addresses:
+
+\begin{itemize}
+    \item \textbf{The interpretability gap:} Most high-performance ML models operate as black boxes, providing predictions without any human-readable justification. Security analysts cannot validate, audit, or act on decisions they cannot understand.
+    \item \textbf{Adversarial vulnerability:} Sophisticated attackers deliberately craft adversarial URLs, introducing small perturbations that mislead ML models into classifying phishing pages as legitimate.
+\end{itemize}
+
+This project, conducted at REGIM-Lab during the 2025--2026 academic year, addresses both challenges simultaneously. The developed system, named \textbf{PhishShield}, integrates state-of-the-art gradient boosting and deep learning models with Explainable AI (XAI) techniques and adversarial robustness evaluation. The result is a transparent, robust, and deployable phishing detection solution.
+
+% ── 1.3 Definition of Phishing ───────────────────────────────────────────────
+\section{Definition of Phishing}
+
+Phishing is a category of social engineering cyberattack in which malicious actors impersonate trusted individuals, organizations, or institutions to deceive victims into revealing sensitive information such as login credentials, credit card details, or personal identification data. These attacks are typically carried out through fraudulent emails, SMS messages, or websites that closely mimic legitimate sources, manipulating users into clicking on malicious links or submitting confidential data on fake forms.
+
+The primary objective of phishing is to exploit human trust and psychological pressure — often through urgency, fear, or authority — to gain unauthorized access to sensitive data. The consequences range from identity theft and financial fraud to corporate data breaches and infrastructure compromise.
+
+Phishing URLs exhibit identifiable structural and content-based patterns, such as the use of IP addresses as domains, excessive URL length, misspelled domain names, absence of HTTPS, presence of suspicious keywords (e.g., ``bank'', ``verify'', ``crypto''), and deceptive HTML elements such as hidden iframes or external form submission targets. These characteristics form the basis of the feature engineering approach used in our system.
+
+% ── 1.4 Project Challenges ───────────────────────────────────────────────────
+\section{Project Challenges}
+
+\subsection{The Black-Box Problem}
+
+High-performance ensemble models such as Random Forest, XGBoost, and LightGBM achieve excellent classification accuracy in phishing detection. However, their decision-making process is opaque: given a URL, these models produce a binary verdict (phishing or legitimate) without any explanation of the features that drove the decision.
+
+In operational cybersecurity environments, this lack of transparency is a critical limitation. A security analyst reviewing a flagged URL needs to understand \textit{why} the system classified it as malicious before taking any action such as blocking access, reporting the domain, or escalating the incident. Without this justification, the analyst cannot distinguish a genuine threat from a false positive, reducing confidence in the system and limiting its real-world utility.
+
+This project addresses this challenge by integrating three complementary Explainable AI (XAI) techniques — SHAP (SHapley Additive exPlanations), LIME (Local Interpretable Model-agnostic Explanations), and Permutation Feature Importance (PFI) — and cross-validating their results through a triangular consistency analysis. For deep learning models, we additionally apply SHAP GradientExplainer and LIME with a model-agnostic prediction wrapper.
+
+\subsection{Adversarial Vulnerability}
+
+A second fundamental limitation of ML-based phishing detection is its vulnerability to adversarial attacks. Adversarial examples are inputs that have been deliberately modified — through small, often imperceptible perturbations — specifically to cause a trained model to misclassify them. In the context of phishing URLs, an attacker might add redundant query parameters, obfuscate subdomains, or alter character encodings to make a malicious URL appear legitimate to a detection model without changing its behavior in a browser.
+
+Two major classes of adversarial attacks are evaluated in this project:
+\begin{itemize}
+    \item \textbf{FGSM (Fast Gradient Sign Method):} A single-step attack that perturbs each feature in the direction of the loss gradient, computed in one forward-backward pass.
+    \item \textbf{PGD (Projected Gradient Descent):} An iterative, multi-step variant of FGSM that applies 40 gradient steps with step size $\alpha = 0.01$ within an $\varepsilon$-ball, producing stronger adversarial examples.
+\end{itemize}
+
+This project evaluates the natural robustness of all six trained models against these attacks and implements defense strategies including feature squeezing and adversarial training for the ML models.
+
+% ── 1.5 Proposed Solution ────────────────────────────────────────────────────
+\section{Proposed Solution}
+
+We propose \textbf{PhishShield}, a comprehensive phishing URL detection system that trains and evaluates six machine learning and deep learning models, integrates multi-paradigm explainability, and deploys the best-performing model as a production-ready web application.
+
+The system is structured around three complementary layers:
+
+\textbf{Layer 1 — Classification Models.} Six models are trained and compared on the PhishFOE dataset (101,063 labeled URLs): three tree-based ML models (LightGBM, XGBoost, Random Forest) and three deep learning architectures (MLP, CNN, LSTM). All models are trained on 29 structural and content-based features extracted from URLs and their HTML pages, using a stratified 80/20 train-test split and StandardScaler normalization.
+
+\textbf{Layer 2 — Explainability and Validation.} To address the black-box problem, the system applies a triangular XAI validation strategy on the ML models: SHAP TreeExplainer, LIME TabularExplainer, and Permutation Feature Importance are computed independently, and their feature rankings are cross-validated using Pearson correlation and top-10 overlap analysis. For the deep learning models, SHAP GradientExplainer and LIME are applied using a model-agnostic wrapper. The system also evaluates adversarial robustness (FGSM and PGD attacks) and performs statistical validation of model differences using Bootstrap Confidence Intervals (200 resamples, 95\%) and one-way ANOVA with Bonferroni-corrected post-hoc tests.
+
+\textbf{Layer 3 — Deployment.} The best model (LightGBM, selected for its highest F1-Score of 98.88\% and superior adversarial robustness) is serialized and deployed as a REST API using FastAPI. The API integrates a hybrid detection engine (whitelist/blacklist checks, heuristic scoring, and ML ensemble prediction) and generates real-time SHAP and LIME explanations for each prediction. A modern web dashboard built with Next.js connects to the API, allowing security analysts to analyze any URL and immediately view the verdict, confidence score, and visual feature explanations.
+
+% ── 1.6 Project Requirements ─────────────────────────────────────────────────
+\section{Project Requirements}
+
+\subsection{Actors Definition}
+
+The PhishShield system involves three distinct actors, each with clearly defined roles and permissions:
+
+\begin{itemize}
+    \item \textbf{Security Analyst:} The primary end-user of the system. The Security Analyst interacts with the web dashboard to submit suspicious URLs for analysis, review the machine learning verdict (phishing or legitimate), examine the confidence score, and interpret the XAI explanations (SHAP and LIME feature importance charts). The analyst uses this information to decide whether to block a domain, escalate a threat alert, or clear a false positive. No technical knowledge of machine learning is required.
+
+    \item \textbf{Administrator:} A technical user responsible for maintaining the system infrastructure. The Administrator manages the whitelist and blacklist databases (adding or removing domains), initiates model retraining when dataset drift is detected, monitors system performance metrics, and updates the dataset with newly confirmed phishing or legitimate URLs. The Administrator has full access to all API endpoints, including privileged management routes.
+
+    \item \textbf{External System:} Any third-party application that integrates with PhishShield programmatically through the REST API. Examples include browser extensions, email filtering gateways, SIEM (Security Information and Event Management) platforms, and threat intelligence pipelines. The External System submits URLs via HTTP POST requests and receives structured JSON responses containing the verdict, confidence, heuristic details, XAI explanations, and robustness metrics.
+\end{itemize}
+
+\subsection{Functional Requirements}
+
+The system must fulfill the following functional capabilities:
+
+\begin{itemize}
+    \item \textbf{URL Feature Extraction:} Given any raw URL as input, the system automatically extracts 29 structural and content-based features, including security indicators (IsHTTPS, IsDomainIP), URL structure metrics (URLLength, NoOfSubDomain, NoOfDots), HTML-based signals (HasTitle, HasPasswordField, HasSubmitButton), and phishing-specific keywords (HasKeywordBank, HasKeywordPay, HasKeywordCrypto).
+
+    \item \textbf{URL Classification:} The system classifies each submitted URL as either phishing or legitimate using an ensemble of three ML models (LightGBM, XGBoost, Random Forest). The output includes a binary label, a confidence score between 0 and 1, and the raw probability estimates from each individual model.
+
+    \item \textbf{XAI Explanation Generation:} For each ML-based prediction, the system generates and returns a SHAP explanation (top-5 features with their Shapley values and directional effect) and a LIME explanation (top-5 locally influential features). These explanations indicate which URL features most strongly drove the phishing or legitimate decision for that specific instance.
+
+    \item \textbf{Hybrid Detection:} Before invoking the ML models, the system checks the submitted URL against a managed whitelist (trusted domains) and blacklist (known malicious domains). A heuristic scoring engine (maximum score: 85 points) evaluates 14 rule-based indicators. The ML ensemble is invoked only when the prior layers cannot provide a definitive verdict.
+
+    \item \textbf{List Management:} The Administrator can add or remove domain entries from the whitelist and blacklist through dedicated API endpoints, allowing the system to be updated in real time without retraining.
+
+    \item \textbf{API Access:} All detection and management functionalities are exposed through a documented REST API (FastAPI with auto-generated Swagger UI), enabling integration by External Systems.
+
+    \item \textbf{Robustness Reporting:} The system provides pre-computed adversarial robustness metrics (FGSM and PGD accuracy drop) for each model, giving the analyst visibility into the system's resilience against adversarial manipulation.
+\end{itemize}
+
+\subsection{Non-Functional Requirements}
+
+\begin{itemize}
+    \item \textbf{Performance:} The system must return a prediction and XAI explanation within 2 seconds for any valid URL, including feature extraction, model inference, and explanation generation.
+    \item \textbf{Accuracy:} The detection must achieve a minimum F1-Score of 97\% on the primary benchmark dataset to ensure operational reliability.
+    \item \textbf{Robustness:} The system must demonstrate measurable resistance to FGSM and PGD adversarial attacks, with a performance drop below 5\% under FGSM perturbation ($\varepsilon = 0.1$).
+    \item \textbf{Scalability:} The FastAPI backend must handle concurrent URL analysis requests using asynchronous processing (async/await), supporting multiple simultaneous users without performance degradation.
+    \item \textbf{Maintainability:} The system architecture must follow a modular design (separate modules for feature extraction, model inference, XAI, and API routing) to facilitate future updates, model swapping, and feature additions.
+    \item \textbf{Explainability:} Every ML-based prediction must be accompanied by at least one human-readable explanation identifying the top contributing features.
+\end{itemize}
+
+% ── 1.7 Use Case Analysis ────────────────────────────────────────────────────
+\section{Use Case Analysis}
+
+The PhishShield system supports three actors — Security Analyst, Administrator, and External System — each interacting with the system through a distinct set of use cases. Figure~\ref{fig:usecase} presents the use case diagram that formalizes these interactions.
+
+\begin{figure}[H]
+\centering
+\begin{tikzpicture}[
+    actor/.style={font=\small\bfseries},
+    usecase/.style={
+        draw, ellipse, fill=blue!15,
+        minimum width=3.6cm, minimum height=0.9cm,
+        align=center, font=\small
+    },
+    line/.style={-latex, thick},
+    dashline/.style={latex-, thick, dashed}
+]
+
+% ─── System boundary ─────────────────────────────────────────────────────────
+\filldraw[fill=blue!5, draw=black!50, rounded corners=6pt]
+    (-2.2, -6.8) rectangle (6.8, 5.5);
+\node[font=\bfseries\small] at (2.3, 5.1) {PhishShield System};
+
+% ─── Use cases ───────────────────────────────────────────────────────────────
+\node[usecase] (analyze)   at (2.3,  3.8) {Analyze URL};
+\node[usecase] (viewres)   at (2.3,  2.3) {View Prediction\\Result};
+\node[usecase] (viewxai)   at (2.3,  0.8) {View XAI\\Explanation};
+\node[usecase] (manlist)   at (2.3, -0.9) {Manage Detection\\Lists};
+\node[usecase] (retrain)   at (2.3, -2.5) {Retrain Model};
+\node[usecase] (callapi)   at (2.3, -4.2) {Call Prediction\\API};
+\node[usecase] (monitor)   at (2.3, -5.8) {Monitor System};
+
+% ─── Actor: Security Analyst (left-top) ──────────────────────────────────────
+% Head
+\draw[fill=white] (-5.2, 4.3) circle (0.32);
+% Body
+\draw (-5.2, 3.98) -- (-5.2, 2.9);
+% Arms
+\draw (-5.2, 3.6) -- (-5.7, 3.15);
+\draw (-5.2, 3.6) -- (-4.7, 3.15);
+% Legs
+\draw (-5.2, 2.9) -- (-5.6, 2.1);
+\draw (-5.2, 2.9) -- (-4.8, 2.1);
+\node[actor, text width=2.4cm, align=center] at (-5.2, 1.8)
+    {Security\\Analyst};
+
+% ─── Actor: Administrator (left-bottom) ──────────────────────────────────────
+\draw[fill=white] (-5.2, -1.1) circle (0.32);
+\draw (-5.2, -1.42) -- (-5.2, -2.5);
+\draw (-5.2, -1.82) -- (-5.7, -2.27);
+\draw (-5.2, -1.82) -- (-4.7, -2.27);
+\draw (-5.2, -2.5) -- (-5.6, -3.3);
+\draw (-5.2, -2.5) -- (-4.8, -3.3);
+\node[actor, text width=2.4cm, align=center] at (-5.2, -3.6)
+    {Administrator};
+
+% ─── Actor: External System (right) ──────────────────────────────────────────
+\draw[fill=gray!15, draw=black] (9.5, -3.6) rectangle (11.5, -2.8);
+\draw (9.5, -3.2) -- (11.5, -3.2);
+\node[font=\small\bfseries] at (10.5, -4.0) {External};
+\node[font=\small\bfseries] at (10.5, -4.4) {System};
+
+% ─── Connections: Security Analyst ───────────────────────────────────────────
+\draw[line] (-4.88, 4.0)  -- (analyze.west);
+\draw[line] (-4.88, 3.0)  -- (viewres.west);
+\draw[line] (-4.88, 2.2)  -- (viewxai.west);
+
+% ─── Connections: Administrator ──────────────────────────────────────────────
+\draw[line] (-4.88, -0.7) -- (manlist.west);
+\draw[line] (-4.88, -2.3) -- (retrain.west);
+\draw[line] (-4.88, -4.8) -- (monitor.west);
+
+% ─── Connections: External System ────────────────────────────────────────────
+\draw[line] (9.5, -3.2) -- (callapi.east);
+
+% ─── Include relationship ─────────────────────────────────────────────────────
+\draw[dashline, gray] (viewxai) -- node[above, font=\tiny\itshape]{$\langle\langle$include$\rangle\rangle$} (viewres);
+
+\end{tikzpicture}
+
+\vspace{8pt}
+\caption{\textit{Use case diagram of the PhishShield system. Three actors interact with seven use cases: the Security Analyst submits URLs and consults results and explanations; the Administrator manages the detection lists, triggers model retraining, and monitors the system; and the External System integrates the detection service through the REST API.}}
+\label{fig:usecase}
+\end{figure}
+
+\subsection{Textual Description of Main Use Cases}
+
+Use cases are described using the standard template: objective, actors, preconditions, postconditions, main scenario, and alternative scenario. Table~\ref{tab:uc1} and Table~\ref{tab:uc2} describe the two most critical use cases.
+
+\begin{table}[H]
+\caption{Textual Description — Use Case: Analyze URL}
+\label{tab:uc1}
+\vspace{4pt}
+\centering
+\begin{tabular}{|p{3.5cm}|p{9cm}|}
+\hline
+\textbf{Use Case} & Analyze URL \\
+\hline
+\textbf{Actor(s)} & Security Analyst, External System \\
+\hline
+\textbf{Objective} & Classify a submitted URL as phishing or legitimate and return a confidence score \\
+\hline
+\textbf{Precondition} & The system is running; the ML models are loaded in memory \\
+\hline
+\textbf{Main Scenario} &
+1. The actor submits a URL via the web interface or API. \newline
+2. The system validates the URL format. \newline
+3. The system checks the whitelist; if matched, returns ``Legitimate'' immediately. \newline
+4. The system checks the blacklist; if matched, returns ``Phishing'' immediately. \newline
+5. The system extracts 29 features from the URL and its HTML content. \newline
+6. The ML ensemble (LightGBM, XGBoost, RandomForest) computes probabilities. \newline
+7. The system assembles and returns the prediction response with verdict, confidence, heuristic details, and XAI explanations. \\
+\hline
+\textbf{Alternative Scenario} & 2a. If the URL format is invalid, the system returns an error message and the actor is invited to resubmit. \newline
+5a. If the HTML page is unreachable, feature extraction uses URL-only features and marks HTML features as unavailable. \\
+\hline
+\textbf{Postcondition} & The result (label, confidence, SHAP/LIME explanation) is displayed to the actor \\
+\hline
+\end{tabular}
+\end{table}
+
+\begin{table}[H]
+\caption{Textual Description — Use Case: Manage Detection Lists}
+\label{tab:uc2}
+\vspace{4pt}
+\centering
+\begin{tabular}{|p{3.5cm}|p{9cm}|}
+\hline
+\textbf{Use Case} & Manage Detection Lists \\
+\hline
+\textbf{Actor(s)} & Administrator \\
+\hline
+\textbf{Objective} & Add or remove domain entries from the whitelist or blacklist to update detection behavior without retraining \\
+\hline
+\textbf{Precondition} & The Administrator is authenticated; the API is running \\
+\hline
+\textbf{Main Scenario} &
+1. The Administrator accesses the Lists management page. \newline
+2. The Administrator selects a list (whitelist or blacklist) and enters a domain name. \newline
+3. The system validates the domain format. \newline
+4. The system updates the JSON list file and reloads it in memory. \newline
+5. A confirmation message is displayed. \\
+\hline
+\textbf{Alternative Scenario} & 3a. If the domain is already in the selected list, the system notifies the Administrator and ignores the duplicate. \newline
+3b. If the domain format is invalid, an error is returned. \\
+\hline
+\textbf{Postcondition} & The detection list is updated; subsequent URL analyses use the updated list \\
+\hline
+\end{tabular}
+\end{table}
+
+% ── 1.8 Activity Diagram ─────────────────────────────────────────────────────
+\section{Activity Diagram}
+
+Figure~\ref{fig:activity} presents the activity diagram that illustrates the complete processing workflow of the PhishShield system from URL submission to result display. The diagram shows two decision branches and four sequential processing stages.
+
+\begin{figure}[H]
+\centering
+\begin{tikzpicture}[
+    node distance=1.5cm,
+    startstop/.style={rectangle, rounded corners, minimum width=3.2cm,
+        minimum height=0.85cm, draw=black, fill=gray!25, font=\small\bfseries,
+        align=center},
+    process/.style={rectangle, minimum width=4.2cm, minimum height=0.85cm,
+        draw=black, fill=white, font=\small, align=center},
+    hybrid/.style={rectangle, minimum width=4.8cm, minimum height=1.0cm,
+        draw=black, fill=orange!15, font=\small, align=center},
+    xaibox/.style={rectangle, minimum width=4.2cm, minimum height=0.85cm,
+        draw=black, fill=blue!12, font=\small, align=center},
+    decision/.style={diamond, aspect=2.2, draw=black, fill=yellow!20,
+        minimum width=3.2cm, font=\small, align=center},
+    reject/.style={rectangle, minimum width=3cm, minimum height=0.85cm,
+        draw=black, fill=red!15, font=\small, align=center},
+    arrow/.style={->, thick}
+]
+
+\node (start)   [startstop]                                  {Start};
+\node (input)   [process,  below of=start]                   {Submit URL};
+\node (valid)   [decision, below of=input,  yshift=-0.5cm]   {Valid URL\\format?};
+\node (extract) [process,  below of=valid,  yshift=-0.6cm]   {Extract 29 Features\\(URL + HTML)};
+\node (hybrid)  [hybrid,   below of=extract]                 {Hybrid Detection Engine\\(Whitelist / Blacklist / Heuristic / ML)};
+\node (xai)     [xaibox,   below of=hybrid]                  {Generate XAI Explanation\\(SHAP + LIME)};
+\node (output)  [process,  below of=xai]                     {Display Result, Confidence\\and Feature Explanations};
+\node (end)     [startstop, below of=output]                 {End};
+
+\node (reject)  [reject, right of=valid, xshift=4.2cm]       {Return Error\\(Invalid URL)};
+
+\draw [arrow] (start)   -- (input);
+\draw [arrow] (input)   -- (valid);
+\draw [arrow] (valid)   -- node[left, font=\small]{Yes} (extract);
+\draw [arrow] (valid)   -- node[above, font=\small]{No}  (reject);
+\draw [arrow] (extract) -- (hybrid);
+\draw [arrow] (hybrid)  -- (xai);
+\draw [arrow] (xai)     -- (output);
+\draw [arrow] (output)  -- (end);
+\draw [arrow] (reject)  |- (end);
+
+\end{tikzpicture}
+
+\vspace{8pt}
+\caption{\textit{Activity diagram of the PhishShield system. The grey nodes represent start and end states. The white node represents standard processing steps. The orange node represents the hybrid detection engine (whitelist, blacklist, heuristic scoring, and ML ensemble). The blue node represents the XAI explanation generation step (SHAP and LIME). The red node represents the error path for invalid URL formats.}}
+\label{fig:activity}
+\end{figure}
+
+The workflow proceeds as follows. First, the user submits a URL through the web interface or API (\textit{Submit URL}). The system validates the URL format; if invalid, an error is returned immediately. For a valid URL, the system extracts 29 features from the URL structure and the HTML content of the target page (\textit{Extract Features}). The hybrid detection engine then applies four sequential checks: it first verifies whether the domain is in the trusted whitelist or the blacklist, then computes a heuristic risk score based on 14 structural rules, and finally invokes the ML ensemble if no prior layer produces a definitive result. Once a verdict is reached via the ML layer, the system generates SHAP and LIME explanations identifying the top contributing features. The final result — including the label, confidence score, heuristic breakdown, ML probabilities, and feature explanations — is displayed to the user.
+
+% ── Conclusion (unnumbered) ──────────────────────────────────────────────────
+\section*{Conclusion}
+\addcontentsline{toc}{section}{Conclusion}
+
+In this chapter, we established the full context and specifications of the PhishShield project. We introduced the host laboratory REGIM-Lab and the research context that motivated this work. We defined phishing as a persistent and evolving cybersecurity threat and identified two fundamental limitations of current ML-based detection approaches: the lack of interpretability and vulnerability to adversarial attacks. Our proposed solution addresses both challenges through a combination of high-performance gradient boosting and deep learning models, triangular XAI validation, adversarial robustness testing, and deployment as a production-ready web application. Finally, we formalized the system's interactions through detailed use case and activity diagrams.
+
+The following chapter presents a comprehensive review of the state of the art in phishing detection, covering machine learning approaches, deep learning architectures, explainable AI techniques, and adversarial robustness research.
